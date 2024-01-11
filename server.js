@@ -2,7 +2,7 @@ const http = require('http');
 const redis = require('redis');
 
 const client = redis.createClient({
-    'host': '127.0.0.1'
+    'host': 'redis' // !!! for master redis (write) we must create separate client with 'host' : 'redis-0.redis-write'
 });
 
 const port = 8080;
