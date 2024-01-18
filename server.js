@@ -3,6 +3,7 @@ const redis = require('redis');
 
 const client = redis.createClient({
     'host': 'redis' // !!! for master redis (write) we must create separate client with 'host' : 'redis-0.redis-write'
+    // Должен еще где-то быть указан пароль к redis, который можно прочитать из файла /etc/redis-passwd
 });
 
 const port = 8080;
