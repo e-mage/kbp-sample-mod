@@ -17,6 +17,7 @@ spec:
       containers:
       - name: frontend
         image: myfrontend:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: JOURNAL_ENTRIES
           valueFrom:

@@ -2,8 +2,25 @@ const http = require('http');
 const redis = require('redis');
 
 const client = redis.createClient({
-    'host': 'redis' // !!! for master redis (write) we must create separate client with 'host' : 'redis-0.redis-write'
+    // 'host': 'redis' // !!! for master redis (write) we must create separate client with 'host' : 'redis-0.redis-write'
     // Должен еще где-то быть указан пароль к redis, который можно прочитать из файла /etc/redis-passwd
+    username: 'default', // use your Redis user.
+    password: readFileSync('/etc/redis-passwd'), // use your password here
+    socket: {
+        host: 'redis',
+        port: 6379
+    }
+});
+
+const clientWrite = redis.createClient({
+    // 'host': 'redis' // !!! for master redis (write) we must create separate client with 'host' : 'redis-0.redis-write'
+    // Должен еще где-то быть указан пароль к redis, который можно прочитать из файла /etc/redis-passwd
+    username: 'default', // use your Redis user.
+    password: readFileSync('/etc/redis-passwd'), // use your password here
+    socket: {
+        host: 'redis-0.redis-write',
+        port: 6379
+    }
 });
 
 const port = 8080;
@@ -30,10 +47,11 @@ const requestHandler = (request, response) => {
         var journals = [];
         if (value) {
             journals = JSON.parse(value);
+            journalsToShow = journals.slice(0, process.env.JOURNAL_ENTRIES); // First JOURNAL_ENTRIES elements
         }
         if (request.method == 'GET') {
             response.writeHead(200);
-            response.end(JSON.stringify(journals));
+            response.end(JSON.stringify(journalsToShow));
         }
         if (request.method == 'POST') {
             try {
@@ -44,7 +62,7 @@ const requestHandler = (request, response) => {
                     body = Buffer.concat(body).toString();
                     const msg = JSON.parse(body);
                     journals.push(msg);
-                    client.set(key, JSON.stringify(journals));
+                    clientWrite.set(key, JSON.stringify(journals));
                     response.writeHead(200);
                     response.end(JSON.stringify(journals));
                 });
