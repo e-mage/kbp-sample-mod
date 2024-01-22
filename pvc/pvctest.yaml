@@ -1,0 +1,13 @@
+#
+# Minimal PVC where a developer can build a website.
+#
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvctest
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Mi
