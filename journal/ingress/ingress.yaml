@@ -6,7 +6,7 @@ metadata:
     name: myingress
 spec:
   rules:
-  - host: journal.kube.cloud.rintd.ru
+  - host: journal.kube.local
     http:
       paths:
       - pathType: Prefix
