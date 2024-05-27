@@ -1,0 +1,70 @@
+apiVersion: v1
+data:
+  index.html: |-
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Kubernetes Best Practice - Chapter 1</title>
+    </head>
+
+    <body>
+      <h1>Kubernetes Best Practice - Chapter 1</h1>
+      <h2>Input some info for the Journal:</h2>
+      <textarea name="mytextarea" id="myTextAreaId" rows="5" cols="60">Some new data here...</textarea>
+      <button onclick="postNewLogs">Add to the Journal</button>
+
+      <h2>All journal records:</h2>
+      <p id="myParagraphId"></p>
+
+      <script>
+
+        async function getAllLogs() {
+          const response = await fetch("api");
+          //const allLogs = await response.json();
+          console.log(response);
+          return response;
+        }
+
+        async function postJSON(data) {
+          try {
+            const response = await fetch("api", {
+              method: "POST", // or 'PUT'
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            console.log("Success:", result);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        }
+
+        async function postNewLogs() {
+          const newDataEl = document.getElementById("myTextAreaId");
+          const data = { somedata: newDataEl.innerHTML };
+          await postJSON(data);
+          // Get and display all logs
+          await displayAllLogs();
+        }
+
+        async function displayAllLogs() {
+          const paragraphEl = document.getElementById("myParagraphId");
+          paragraphEl.innerHTML = await getAllLogs();
+        }
+
+        displayAllLogs();
+
+      </script>
+
+    </body>
+    </html>
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: fileserver-webdata

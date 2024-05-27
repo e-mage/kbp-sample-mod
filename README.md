@@ -42,4 +42,8 @@ OR (https://minikube.sigs.k8s.io/docs/handbook/pushing/#8-building-images-to-in-
 
 10. Folder `old` contains some original files from forked repo.
 
+11. File index.html for fileserver (nginx) is created with fileserver-configmap1.yaml. To recreate the fileserver-configmap1.yaml from modified origin index.html run command:
+`kubectl create configmap fileserver-webdata --from-file=index.html=index.html --dry-run=client -o yaml > fileserver-configmap1.yaml`
+
+
 

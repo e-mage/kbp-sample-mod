@@ -29,7 +29,12 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/nginx/conf.d/
+        - name: webdata
+          mountPath: /var/www/html/
       volumes:
       - name: config
         configMap:
           name: fileserver-config
+      - name: webdata
+        configMap:
+          name: fileserver-webdata
